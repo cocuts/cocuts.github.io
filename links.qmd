@@ -1,0 +1,8 @@
+---
+title: "Links & Resources"
+page-layout: full
+---
+
+Maybe I'll fill this out someday. In the interim, here's Calvin and Hobbes
+
+![relativity](/assets/calvinhobbesrelativitytest.jpg)

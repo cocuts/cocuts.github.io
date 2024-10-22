@@ -1,0 +1,32 @@
+_quarto.yml:
+project:
+  type: website
+  output-dir: bki
+
+website:
+  title: "Cory Cutsail"
+  navbar:
+    background: light
+    search: true
+    right:
+      - icon: github
+        href: https://github.com/cocuts
+      - icon: twitter
+        href: https://bsky.app/profile/stochasto.bsky.social
+    left:
+      - href: index.qmd
+        text: Home
+      - href: blog/index.qmd
+        text: Blog
+      - href: links.qmd
+        text: Links
+      - href: photos.qmd
+        text: Photos
+
+format:
+  html:
+    theme: 
+      light: flatly
+    css: styles.css
+    toc: true
+    page-layout: full

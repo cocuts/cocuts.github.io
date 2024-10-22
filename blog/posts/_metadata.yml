@@ -1,0 +1,15 @@
+title-block-banner: true
+
+author: "Cory Cutsail"
+
+# Add GitHub edit link to all posts
+comments: 
+  giscus: 
+    repo: cocuts/cocuts.github.io
+
+# Add Table of Contents to all posts
+toc: true
+toc-location: left
+
+# Format dates consistently
+date-format: "YYYY-MM-DD"

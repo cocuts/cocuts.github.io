@@ -1,0 +1,65 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Welcome",
+    "section": "",
+    "text": "Hi there, I’m Cory, welcome to my website! I’m a Lead Data Scientist specializing in healthcare analytics, economics, and machine learning. I’m particularly interested in:\n\nSupply chain optimization and economic modeling\nReinforcement learning applications in healthcare\nCausal inference and econometrics\nMLOps and production deployment\n\nBelow you’ll find my newest blog posts about these topics and more. I also do consulting work - click here to learn more.\n\n\n\n\n\nstyles.css: /* Custom styles */ :root { –navbar-height: 60px; }\n.navbar { box-shadow: 0 2px 5px rgba(0,0,0,0.1); }\n.title-block-banner { background-color: #f8f9fa; padding: 3rem 0; margin-bottom: 2rem; }\n.grid { margin: 2rem 0; }\n.blog-post { margin-bottom: 2rem; padding: 2rem; border: 1px solid #eee; border-radius: 5px; transition: all 0.3s ease; }\n.blog-post:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.1); }\n.announcement-bar { background-color: #e3f2fd; padding: 1rem; margin-bottom: 2rem; border-radius: 5px; }"
+  },
+  {
+    "objectID": "links.html",
+    "href": "links.html",
+    "title": "Links & Resources",
+    "section": "",
+    "text": "GitHub Repository\nLinkedIn Profile\nTwitter Feed\n\n\n\n\n\n\n\nHealthcare Analytics on Medium\nNEJM Catalyst\nHealth Affairs Blog\n\n\n\n\n\nPapers With Code\nTowards Data Science\nAnalytics Vidhya\n\n\n\n\n\nMLflow Documentation\nPytorch\nscikit-learn\n\n\n\n\n\n\nAMIA (American Medical Informatics Association)\nHIMSS (Healthcare Information and Management Systems Society)\nINFORMS (Institute for Operations Research and Management Sciences)\n\nNote: These are resources I find valuable in my work and research. Feel free to suggest additional resources!"
+  },
+  {
+    "objectID": "links.html#publications-projects",
+    "href": "links.html#publications-projects",
+    "title": "Links & Resources",
+    "section": "",
+    "text": "GitHub Repository\nLinkedIn Profile\nTwitter Feed"
+  },
+  {
+    "objectID": "links.html#recommended-reading",
+    "href": "links.html#recommended-reading",
+    "title": "Links & Resources",
+    "section": "",
+    "text": "Healthcare Analytics on Medium\nNEJM Catalyst\nHealth Affairs Blog\n\n\n\n\n\nPapers With Code\nTowards Data Science\nAnalytics Vidhya\n\n\n\n\n\nMLflow Documentation\nPytorch\nscikit-learn"
+  },
+  {
+    "objectID": "links.html#professional-organizations",
+    "href": "links.html#professional-organizations",
+    "title": "Links & Resources",
+    "section": "",
+    "text": "AMIA (American Medical Informatics Association)\nHIMSS (Healthcare Information and Management Systems Society)\nINFORMS (Institute for Operations Research and Management Sciences)\n\nNote: These are resources I find valuable in my work and research. Feel free to suggest additional resources!"
+  },
+  {
+    "objectID": "photos.html",
+    "href": "photos.html",
+    "title": "Photo Gallery",
+    "section": "",
+    "text": "Data Science Conference 2023\n\n\n\n\n\n\n\nHealthcare Analytics Summit\n\n\n\n\n\n\n\nMLOps Workshop\n\n\n\n\n\n\n\n\n\n\n\n\nSupply Chain Optimization Model\n\n\nNetwork visualization of healthcare supply chain optimization\n\n\n\n\n\nPatient Flow Analysis\n\n\nHealthcare system patient flow analysis dashboard\n\n\n\n\n\n\n\n\n\n\nTeam Workshop\n\n\nData Science Team Workshop\n\n\n\n\n\nConference Panel\n\n\nHealthcare Analytics Panel Discussion\n\n\n\n\n\nResearch Presentation\n\n\nPresenting Research Findings\n\n\nNote: Photos are regularly updated to showcase recent work and events. Check back for new additions!"
+  },
+  {
+    "objectID": "photos.html#conference-presentations-speaking-events",
+    "href": "photos.html#conference-presentations-speaking-events",
+    "title": "Photo Gallery",
+    "section": "",
+    "text": "Data Science Conference 2023\n\n\n\n\n\n\n\nHealthcare Analytics Summit\n\n\n\n\n\n\n\nMLOps Workshop"
+  },
+  {
+    "objectID": "photos.html#project-visualizations",
+    "href": "photos.html#project-visualizations",
+    "title": "Photo Gallery",
+    "section": "",
+    "text": "Supply Chain Optimization Model\n\n\nNetwork visualization of healthcare supply chain optimization\n\n\n\n\n\nPatient Flow Analysis\n\n\nHealthcare system patient flow analysis dashboard"
+  },
+  {
+    "objectID": "photos.html#recent-events",
+    "href": "photos.html#recent-events",
+    "title": "Photo Gallery",
+    "section": "",
+    "text": "Team Workshop\n\n\nData Science Team Workshop\n\n\n\n\n\nConference Panel\n\n\nHealthcare Analytics Panel Discussion\n\n\n\n\n\nResearch Presentation\n\n\nPresenting Research Findings\n\n\nNote: Photos are regularly updated to showcase recent work and events. Check back for new additions!"
+  }
+]

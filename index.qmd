@@ -1,0 +1,6 @@
+---
+title: "Welcome"
+page-layout: full
+---
+
+Hi there, I'm Cory! I'm a Lead Data Scientist specializing in healthcare analytics, economics, and machine learning. I'm particularly interested in industrial organization, probability, and reinforcement learning. I've spent my entire career working in the healthcare finance space, so that's my primary area of expertise. This is mostly for exploring the other stuff :)

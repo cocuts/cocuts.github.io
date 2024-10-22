@@ -1,0 +1,17 @@
+---
+title: "Welcome to my blog :)"
+listing:
+  - id: posts
+    contents: posts
+    sort: "date desc"
+    type: default
+    categories: true
+    sort-ui: true
+    filter-ui: true
+    fields: [date, title, description, categories, image]
+page-layout: full
+title-block-banner: true
+---
+
+:::{#posts}
+:::

@@ -1,0 +1,24 @@
+---
+title: "Photo Gallery"
+page-layout: full
+---
+I'll add some photos from personal and professional stuff here eventually. Probably some data viz too. These bears are very good placeholders though.
+
+::::{.grid}
+:::{.g-col-6}
+![Baby Bears](/assets/cubs.jpg)
+
+:::
+:::{.g-col-6}
+![Wow Bear](/assets/brown_bear2.jpg)
+:::
+::::
+
+::::{.grid}
+:::{.g-col-6}
+![More Baby Bears](/assets/cute_cub.jpg)
+:::
+:::{.g-col-6}
+![Even More Baby Bears](/assets/cub.jpg)
+:::
+::::

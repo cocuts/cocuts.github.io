@@ -1,7 +1,7 @@
 _quarto.yml:
 project:
   type: website
-  output-dir: bki
+  output-dir: docs
 
 website:
   title: "Cory Cutsail"

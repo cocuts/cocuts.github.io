@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.45">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Cory Cutsail">
+<meta name="dcterms.date" content="2024-10-21">
+
+<title>Dynamic Pricing in a Very Dumb Vacuum – Cory Cutsail</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Cory Cutsail</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../links.html"> 
+<span class="menu-text">Links</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../photos.html"> 
+<span class="menu-text">Photos</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/cocuts"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://bsky.app/profile/stochasto.bsky.social"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-right">
+      <h1 class="title">Dynamic Pricing in a Very Dumb Vacuum</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-right">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Cory Cutsail </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2024-10-21</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#economic-foundations-of-pricing-strategy" id="toc-economic-foundations-of-pricing-strategy" class="nav-link" data-scroll-target="#economic-foundations-of-pricing-strategy">Economic Foundations of Pricing Strategy</a>
+  <ul class="collapse">
+  <li><a href="#theoretical-underpinnings" id="toc-theoretical-underpinnings" class="nav-link" data-scroll-target="#theoretical-underpinnings">Theoretical Underpinnings</a></li>
+  <li><a href="#antitrust-considerations" id="toc-antitrust-considerations" class="nav-link" data-scroll-target="#antitrust-considerations">Antitrust Considerations</a></li>
+  </ul></li>
+  <li><a href="#spectrum-of-pricing-approaches" id="toc-spectrum-of-pricing-approaches" class="nav-link" data-scroll-target="#spectrum-of-pricing-approaches">Spectrum of Pricing Approaches</a>
+  <ul class="collapse">
+  <li><a href="#first-order-condition-foc-based-approaches" id="toc-first-order-condition-foc-based-approaches" class="nav-link" data-scroll-target="#first-order-condition-foc-based-approaches">First-Order Condition (FOC) Based Approaches</a></li>
+  <li><a href="#heuristic-approaches" id="toc-heuristic-approaches" class="nav-link" data-scroll-target="#heuristic-approaches">Heuristic Approaches</a></li>
+  <li><a href="#reinforcement-learning-approaches" id="toc-reinforcement-learning-approaches" class="nav-link" data-scroll-target="#reinforcement-learning-approaches">Reinforcement Learning Approaches</a></li>
+  </ul></li>
+  <li><a href="#comparative-analysis-and-simulation-setup" id="toc-comparative-analysis-and-simulation-setup" class="nav-link" data-scroll-target="#comparative-analysis-and-simulation-setup">Comparative Analysis and Simulation Setup</a></li>
+  <li><a href="#critical-evaluation-and-antitrust-implications" id="toc-critical-evaluation-and-antitrust-implications" class="nav-link" data-scroll-target="#critical-evaluation-and-antitrust-implications">Critical Evaluation and Antitrust Implications</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-right" id="quarto-document-content">
+
+
+
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Recent advancements in artificial intelligence, particularly reinforcement learning (RL), have been touted as potentially transformative for pricing strategies in oligopolistic markets. I don’t really buy it, but wasn’t super familiar with what the process here looked like in practice. In order to Get Familiar, I put together a simple model where firms compete on price, but with different pricing strategies. We’ll get to that later: first, some background.</p>
+</section>
+<section id="economic-foundations-of-pricing-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="economic-foundations-of-pricing-strategy">Economic Foundations of Pricing Strategy</h2>
+<section id="theoretical-underpinnings" class="level3">
+<h3 class="anchored" data-anchor-id="theoretical-underpinnings">Theoretical Underpinnings</h3>
+<p>The economic theory of pricing in oligopolistic markets has a rich history, dating back to the seminal works of <span class="citation" data-cites="cournot1838">(<a href="#ref-cournot1838" role="doc-biblioref"><strong>cournot1838?</strong></a>)</span> and <span class="citation" data-cites="bertrand1883">(<a href="#ref-bertrand1883" role="doc-biblioref"><strong>bertrand1883?</strong></a>)</span>. These models laid the groundwork for understanding strategic interactions in imperfectly competitive markets. Subsequent developments, including the theory of contestable markets <span class="citation" data-cites="baumol1982contestable">(<a href="#ref-baumol1982contestable" role="doc-biblioref">Baumol, Panzar, and Willig 1982</a>)</span>, have further refined our understanding of pricing dynamics and market entry.</p>
+<p>Most firms probably don’t set prices based on first order conditions. Acquiring all relevant data is costly, and it’s not totally possible to have perfect information about consumer responses to price changes in most environments (I can’t think of any where it <em>would be</em> possible). That said, optimal firm behavior in an ideal environment provides a nice benchmark for evaluating alternative price-setting approaches.</p>
+</section>
+<section id="antitrust-considerations" class="level3">
+<h3 class="anchored" data-anchor-id="antitrust-considerations">Antitrust Considerations</h3>
+<p>Antitrust policy has long been informed by economic theory. The structure-conduct-performance paradigm, proposed by <span class="citation" data-cites="mason1939price">Mason (<a href="#ref-mason1939price" role="doc-biblioref">1939</a>)</span> and developed by <span class="citation" data-cites="bain1968industrial">Bain (<a href="#ref-bain1968industrial" role="doc-biblioref">1968</a>)</span>, has been influential in shaping antitrust thinking. Similarly, the Chicago School critique, articulated by scholars like <span class="citation" data-cites="posner1979chicago">Posner (<a href="#ref-posner1979chicago" role="doc-biblioref">1979</a>)</span>, emphasizes the importance of efficiency considerations in antitrust analysis.</p>
+<p>In practice, antitrust authorities have developed various tools to assess potentially anticompetitive pricing behaviors, including:</p>
+<ol type="1">
+<li><strong>Predatory Pricing Tests</strong>: The Areeda-Turner test <span class="citation" data-cites="areeda1975predatory">(<a href="#ref-areeda1975predatory" role="doc-biblioref">Areeda and Turner 1975</a>)</span> provides a cost-based framework for identifying predatory pricing.</li>
+<li><strong>Market Concentration Measures</strong>: Indices like the Herfindahl-Hirschman Index (HHI) are used to assess market concentration <span class="citation" data-cites="us2010horizontal">(<a href="#ref-us2010horizontal" role="doc-biblioref">U.S. Department of Justice and Federal Trade Commission 2010</a>)</span>.</li>
+<li><strong>Upward Pricing Pressure</strong>: In merger analysis, measures of upward pricing pressure help quantify incentives for post-merger price increases <span class="citation" data-cites="farrell2010antitrust">(<a href="#ref-farrell2010antitrust" role="doc-biblioref">Farrell and Shapiro 2010</a>)</span>.</li>
+</ol>
+<p>These tools are imperfect, much like the models they’re based on. HHI, for example, is particularly sensitive to industry definitions. Spatial competition and diversity of product offerings can skew the results HHI yields in a way that isn’t immediately obvious.</p>
+</section>
+</section>
+<section id="spectrum-of-pricing-approaches" class="level2">
+<h2 class="anchored" data-anchor-id="spectrum-of-pricing-approaches">Spectrum of Pricing Approaches</h2>
+<section id="first-order-condition-foc-based-approaches" class="level3">
+<h3 class="anchored" data-anchor-id="first-order-condition-foc-based-approaches">First-Order Condition (FOC) Based Approaches</h3>
+<p>The traditional economic approach assumes firms set prices to maximize profits, usually defined something like:</p>
+<p><span class="math display">\[\pi_i(Q_{D,i}(p_i),p_i) = (p_i - c_i) \cdot Q_d(p_i)\]</span></p>
+<p>If we assume firm <span class="math inline">\(i\)</span>’s quantity demanded (<span class="math inline">\(Q_{D_i}(p_i)\)</span>) is linear in price <span class="math inline">\(p_i\)</span>, and marginal costs <span class="math inline">\(c_i\)</span> are fixed, we’ll have a profit function that looks something like:</p>
+<p><span class="math display">\[\pi_i(p_i) = (p_i - c_i) \cdot (\alpha - \beta \cdot p_i) \]</span></p>
+<p>yielding familiar FOCs:</p>
+<p><span class="math display">\[\frac{\partial \pi_i}{\partial p_i} = (\alpha + \beta c_i - 2 \beta p_i)\]</span></p>
+<p>and optimality condition</p>
+<p><span class="math display">\[ p_i = \frac{\alpha + \beta c_i}{2\beta} \]</span></p>
+<p>We’re going to add a minor complicating factor here and assume that firms compete on prices, taking other firms’ behavior as given, as well as time-to-delivery, which is exogenously determined. In the long run I’d like to tweak this model so that time-to-delivery can be minimized via bilateral contracting with a third party company (this can be thought of as selling goods on Amazon), but for now we’re keeping it simple. This whole exercise was inspired by Amazon dropshippers, for what it’s worth.</p>
+<p>I’m mostly curious about how these firms will behave when competitors behave suboptimally. To that end, we’ll introduce two other firm types: one that follows a heuristic, and another that sets prices dynamically using reinforcement learning. All code for this exercise can be found here:.</p>
+</section>
+<section id="heuristic-approaches" class="level3">
+<h3 class="anchored" data-anchor-id="heuristic-approaches">Heuristic Approaches</h3>
+<p>In practice, many firms rely on simpler heuristic methods for price setting. These “rules of thumb” are often easier to implement and communicate within an organization. Common heuristics include:</p>
+<ol type="1">
+<li><strong>Cost-Plus Pricing</strong>: <span class="math inline">\(p_i = c_i * (1 + \varphi_i)\)</span>, where <span class="math inline">\(\varphi_i\)</span> is a markup. In practice the markup is often based set on a combination of margin targets and projected demand.</li>
+<li><strong>Competitor-Based Pricing</strong>: <span class="math inline">\(p_i = \mathbb{E}\[p_{-i}\] * (1 + \gamma_i)\)</span> - basically the firm takes the expected market price and adjusts it up or down by some percentage <span class="math inline">\(\gamma\)</span>, again often based on some combination of a margin target and projected demand.</li>
+</ol>
+<p>Heuristic approaches can be surprisingly effective in complex, dynamic environments <span class="citation" data-cites="gigerenzer2011heuristic">(<a href="#ref-gigerenzer2011heuristic" role="doc-biblioref">Gigerenzer and Gaissmaier 2011</a>)</span>. They often require less detailed information about demand or competitive conditions compared to FOC-based methods. While they may not lead to theoretically optimal profits, they can be “good enough” given the costs and complexities of implementing more sophisticated approaches <span class="citation" data-cites="simon1956rational">(<a href="#ref-simon1956rational" role="doc-biblioref">Simon 1956</a>)</span>.</p>
+</section>
+<section id="reinforcement-learning-approaches" class="level3">
+<h3 class="anchored" data-anchor-id="reinforcement-learning-approaches">Reinforcement Learning Approaches</h3>
+<p>Reinforcement learning (RL) has been proposed as a new approach to pricing strategy. In an RL framework, pricing decisions are made by an agent that learns from the outcomes of its actions over time. The key components of an RL system for pricing typically include:</p>
+<ol type="1">
+<li><strong>State space</strong>: Market conditions, competitor prices, inventory levels, etc.</li>
+<li><strong>Action space</strong>: Possible prices the firm can set</li>
+<li><strong>Reward function</strong>: Typically the profit earned from each pricing decision</li>
+</ol>
+<p>Proponents argue that RL approaches have the potential to capture complex, non-linear relationships in the market without requiring explicit model specification, and can adapt to changing market conditions through continuous learning. They’re probably wrong at this point in time, but RL-based approaches are interesting nonetheless.</p>
+<p>Why are they ‘probably wrong’?</p>
+<ol type="1">
+<li><strong>Adaptability</strong>: Firms using FOC or heuristic approaches can and do update their strategies based on market outcomes.</li>
+<li><strong>Complexity</strong>: While RL can handle complex state spaces, it’s not clear that this additional complexity leads to better outcomes in many real-world pricing scenarios.</li>
+<li><strong>Learning</strong>: Traditional approaches also “learn” from data, albeit in a more structured manner.</li>
+</ol>
+<p>Moreover, RL strategies might essentially learn to emulate existing heuristic approaches:</p>
+<ol type="1">
+<li><strong>Competitor-Based Pricing</strong>: An RL agent might learn to price relative to competitors - and those competitors may in turn be RL agents!</li>
+<li><strong>Value-Based Pricing</strong>: Through interactions with the market, an RL agent could learn to estimate customers’ willingness to pay and price accordingly.</li>
+</ol>
+<p>In this light, RL might be viewed not as a revolutionary new approach, but as a potentially more “efficient” way of implementing and combining existing pricing strategies. “Efficient” is in scare quotes because deviations from optimal behavior generate deadweight loss by definition, as well as the fact that deploying AI models at scale in the year 2024 generates non-negligible externalities.</p>
+</section>
+</section>
+<section id="comparative-analysis-and-simulation-setup" class="level2">
+<h2 class="anchored" data-anchor-id="comparative-analysis-and-simulation-setup">Comparative Analysis and Simulation Setup</h2>
+<p>Let’s outline the model we’ll use in the simulation here.</p>
+<ol type="1">
+<li><p><strong>Market Model</strong>: The general version of the model we’re looking at here has N firms employing one of three strategies:</p>
+<ul>
+<li>FOC-based: Given known demand and a simple production function, firms maximize profits based on first order conditions</li>
+<li>Heuristic: Firms use competitor-based pricing with periodic adjustments</li>
+<li>RL-based: Firms use a Deep Q-Network to learn pricing strategies</li>
+</ul></li>
+</ol>
+<p>and facing demand:</p>
+<p><span class="math display">\[D_i = \alpha - \beta p_i + \gamma \sum_{j\neq i} p_j - \rho d_i + \xi \sum_{j\neq i} d_j\]</span></p>
+<p>where <span class="math inline">\(p_i\)</span> is firm i’s price, <span class="math inline">\(d_i\)</span> is its delivery time (exogenously determined), and <span class="math inline">\(\alpha, \beta, \xi, \rho\)</span> are parameters.</p>
+<ol start="3" type="1">
+<li><p><strong>Simulation Dynamics</strong>: The simulation will run for T periods, with firms making pricing decisions in each period based on their respective strategies. We’re going to keep it simple and have one firm of each type, but two FOC firms (really just as a sanity check to make sure everyone’s behavior is as expected - the two FOC firms should behave <em>very</em> similarly)</p></li>
+<li><p><strong>Outcome Measures</strong>: We will track prices, profits, and market concentration over time.</p></li>
+</ol>
+<p>All of the code for the simulation below can be found in <a href="https://github.com/cocuts/dynamic-pricing-sim">this repo</a>.</p>
+<div id="afa186ba" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dynamic_pricing_sim <span class="im">import</span> Market, FOCFirm, HeuristicFirm, RLFirm, run_simulation, plot_results</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up the market</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>demand_params <span class="op">=</span> {</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'alpha'</span>: <span class="dv">100</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'beta'</span>: <span class="dv">20</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'gamma'</span>: <span class="dv">6</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'xi'</span>: <span class="dv">0</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">'rho'</span>: <span class="dv">0</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>market <span class="op">=</span> Market(<span class="dv">4</span>,demand_params)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>foc_firm <span class="op">=</span> FOCFirm.FOCFirm(cost<span class="op">=</span><span class="dv">5</span>, market<span class="op">=</span>market)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>heuristic_firm <span class="op">=</span> HeuristicFirm.HeuristicFirm(cost<span class="op">=</span><span class="dv">5</span>, markup<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>foc_firm_2 <span class="op">=</span> FOCFirm.FOCFirm(cost<span class="op">=</span><span class="dv">5</span>, market<span class="op">=</span>market)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>rl_hyperparams <span class="op">=</span> RLFirm.RLHyperParams</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>rl_hyperparams.epsilon <span class="op">=</span> <span class="fl">0.5</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>rl_firm <span class="op">=</span> RLFirm.RLFirm(state_size<span class="op">=</span><span class="dv">9</span>, action_size<span class="op">=</span><span class="dv">40</span>, cost<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up the firms</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>firms <span class="op">=</span> [</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    foc_firm,</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    foc_firm_2,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    heuristic_firm,</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    rl_firm</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Set delivery times (assumed constant for simplicity)</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>delivery_times <span class="op">=</span> np.array([<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>])</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the simulation</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="dv">1000</span>  </span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>prices_history, profits_history, demand_history <span class="op">=</span> run_simulation(T, market, firms, delivery_times)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the results</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plot_results(prices_history, profits_history, demand_history,[<span class="st">'FOC'</span>, <span class="st">'FOC2'</span>, <span class="st">'Heuristic'</span>, <span class="st">'RL'</span>])</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>C:\Users\Cory\AppData\Local\Programs\Python\Python310\lib\site-packages\dynamic_pricing_sim\equilibrium.py:15: RuntimeWarning: The iteration is not making good progress, as measured by the 
+  improvement from the last ten iterations.
+  equilibrium_prices = fsolve(equations, initial_guess)
+C:\Users\Cory\AppData\Local\Programs\Python\Python310\lib\site-packages\dynamic_pricing_sim\equilibrium.py:15: RuntimeWarning: The iteration is not making good progress, as measured by the 
+  improvement from the last five Jacobian evaluations.
+  equilibrium_prices = fsolve(equations, initial_guess)</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Recent avg profit: -26.15, Last price: 9.88, Last profit: -66.57
+Recent avg profit: -16.23, Last price: 9.88, Last profit: 0.00
+Recent avg profit: 26.47, Last price: 9.88, Last profit: 0.00
+Recent avg profit: 42.90, Last price: 9.88, Last profit: -8.98
+Recent avg profit: 61.30, Last price: 9.88, Last profit: 0.00
+Recent avg profit: 84.84, Last price: 9.88, Last profit: 116.33
+Recent avg profit: 90.84, Last price: 9.88, Last profit: 116.33
+Recent avg profit: 107.85, Last price: 9.88, Last profit: 116.33
+Recent avg profit: 114.01, Last price: 9.88, Last profit: 116.33
+Recent avg profit: 109.79, Last price: 9.88, Last profit: 116.33</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="dynamic-pricing_files/figure-html/cell-2-output-3.png" width="1142" height="1717" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ok so the RL firm settles into a decent strategy over time that behaves <sub>reasonably</sub> well in the long-run. The FOC firms are mostly stable, as expected, and the heuristic firm is all over the place. That’s what you get for raising prices erratically for no reason! Bad profits!</p>
+<p>Here are some of the summary stats we get from the above:</p>
+<div id="d02134bb" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>avg_prices <span class="op">=</span> np.mean(prices_history, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>avg_profits <span class="op">=</span> np.mean(profits_history, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>price_volatility <span class="op">=</span> np.std(prices_history, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Average Prices:"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, firm_type <span class="kw">in</span> <span class="bu">enumerate</span>([<span class="st">'FOC'</span>, <span class="st">'FOC2'</span>, <span class="st">'Heuristic'</span>, <span class="st">'RL'</span>]):</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>firm_type<span class="sc">}</span><span class="ss"> Firm: </span><span class="sc">{</span>avg_prices[i]<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Average Profits:"</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, firm_type <span class="kw">in</span> <span class="bu">enumerate</span>([<span class="st">'FOC'</span>, <span class="st">'FOC2'</span>, <span class="st">'Heuristic'</span>, <span class="st">'RL'</span>]):</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>firm_type<span class="sc">}</span><span class="ss"> Firm: </span><span class="sc">{</span>avg_profits[i]<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Average Prices:
+FOC Firm: 9.57
+FOC2 Firm: 9.55
+Heuristic Firm: 17.68
+RL Firm: 7.29
+
+Average Profits:
+FOC Firm: 74.97
+FOC2 Firm: 74.77
+Heuristic Firm: -0.01
+RL Firm: 59.56</code></pre>
+</div>
+</div>
+</section>
+<section id="critical-evaluation-and-antitrust-implications" class="level2">
+<h2 class="anchored" data-anchor-id="critical-evaluation-and-antitrust-implications">Critical Evaluation and Antitrust Implications</h2>
+<p>This simulation setup allows us to critically evaluate several key questions:</p>
+<ol type="1">
+<li>How do RL-based pricing strategies perform compared to traditional FOC-based and heuristic approaches in terms of firm profitability and market outcomes?</li>
+</ol>
+<ul>
+<li>Obviously the firm that is <em>literally</em> optimizing/maximizing profit wins - the rules of the game here are skewed. That said, the RL firm significantly outperforms our (admittedly dumb) heuristic in this simple model</li>
+</ul>
+<ol start="2" type="1">
+<li>Do RL strategies converge to known optimal strategies in simple market settings? If so, do they offer any advantage over traditional methods?</li>
+</ol>
+<ul>
+<li>It’s obvious that this simple RL agent does <em>not</em> learn the optimal pricing strategy. It’s also a bit of a pain in the neck to calibrate - it took me a decent amount of time to get to a point where the model would get consistently reasonable results - I ended up having to drop the delivery times from demand, at least for this run, to get the RL agent to deliver non-negative profits. A decent amount of reward shaping was also required.</li>
+</ul>
+<ol start="3" type="1">
+<li>In more complex settings, do RL strategies discover genuinely novel pricing strategies, or do they essentially learn to implement sophisticated versions of known heuristics?</li>
+</ol>
+<ul>
+<li>This project took me a few hours of work to get up and running, and frankly at the end of it I’m not totally sure what strategy the agent settled on. My hunch is that it gets stuck in a local optimum - there were scenarios where it appeared to be maximizing quantity demanded as opposed to profit, but the relative simplicity of the model and limited training time makes me think that it was just converging to a local optimum.</li>
+</ul>
+<ol start="4" type="1">
+<li>How does the presence of RL-based pricing affect market dynamics and the behavior of firms using other pricing strategies?</li>
+</ol>
+<ul>
+<li>The FOC firms aren’t really impacted by the RL firm - given non-zero price response by design, the FOC firm does exhibit some (very small) price volatility, but ultimately the consistency is well on display. Heuristic firms, however, become fairly erratic. I think this is probably a reasonable approximation of reality - firms with a well-established pricing strategy based on knowledge of their consumers and internal operation are going to know how to respond to competitors’ erratic behavior, whereas firms who are pricing based solely on perceptions of market conditions are going to struggle a bit more. In reality, the RL firm would likely train on historical firm data as well as publicly available price histories, so the ‘exploration’ periods would likely happen ‘in the lab’. That said, in practice dynamic pricing models are much more intricate than the one presented here, and in turn much more opaque - and less predictable in the face of shocks.</li>
+</ul>
+<ol start="5" type="1">
+<li>What are the computational and data requirements for implementing RL-based pricing, and how do these compare to the requirements for sophisticated implementations of traditional approaches?</li>
+</ol>
+<ul>
+<li>So if you’re putting together a silly lil model on your personal laptop, this simulation runs start-to-finish in about 5 seconds. And compared to some of the other work I’ve done in the pricing space, it was a pain in the neck to set up and calibrate. As nice as it would be to get something like this set up right and let it try to solve my own <span class="math inline">\(\pi-max\)</span> problems, I’m reminded of the adage that’s been circulating a lot with the rise of the LLM: <img src="hold-em-accountable.jpg" class="img-fluid" alt="Make smarter decisions"></li>
+</ul>
+<p>Ultimately theese things need a ton of guardrails to avoid erratic behavior, and these guardrails ultimately serve to simulate the optimal behavior we’re trying to avoid modeling in the first place. There are a bunch of other non-theoretical reasons, like customer retention or avoidance of tacit collusive behavior, that we might not want to outsource this work too. So like, maybe we should just do the work. I can think of a dozen real-world use cases of RL in an operations management setting, but price setting doesn’t seem like a great candidate.</p>
+<p>On the topic of tacit collusion, from an antitrust perspective it’s super important to understand whether RL algorithms fundamentally change the nature of market competition. Can RL algorithms learn to coordinate on high markups without explicit collusion? If so, is this fundamentally different from tacit collusion that can arise with traditional pricing methods? The former seems likely, especially if you have two agents functionally following the same strategy by being trained with the same data. There’s an interesting segment on quant work from Good News that talks a bit about how the algorithms quants use at finance firms</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/DuBrreMiZlA?si=F83ljDsEuN-AE-5J" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<p>in particular</p>
+<blockquote class="blockquote">
+<p>So if you’re … yapping about this wacky new trading strategy you found, they’re going to go implement it at their firm and you’re gonna lose all your edge</p>
+</blockquote>
+<p>There are fundamentally two types of model variation here: features incorporated and model architecture. My gut says that in most of the ways that matter, these two should converge in the long run - if one model outperforms another, competitors will work to identify where the advantage is coming from and adopt it. It’s somewhere between efficient markets and no-free lunch: in the long-run, the models are the same. Once we’ve extracted all the juice from dynamic pricing we’re left where we started, good old cost minimization.</p>
+<p>Firms considering implementing these strategies are likely not cost-constrained, but the cost of training and serving these models is non-negligible and should probably incorporated into the broader ROI calc when it comes to incorporating these as an alternative to more traditional price-setting strategies.</p>
+<p>Most of what I’ve learned in this exercise was basically how to go about setting up a dynamic pricing agent, as most of my background in RL previously was thinking about how roombas should work or trying to figure out why a Q-learning agent I birthed sucks so bad at jumping over the green pipe that’s just a little too tall.</p>
+<p>Was it otherwise valuable? My take is that there are basically three conditions you need to meet for this to be worth thinking about:</p>
+<pre><code>1. Your firm is already on a cloud services provider that makes deployment at scale easy
+2. That cloud environment also has well-constructed feature store that'd make these model builds easier
+3. You have a ton of time on your hands and have already worked through the stuff that you *know* is going to add value</code></pre>
+<p>If you can check all three boxes here, this is probably a great exercise - especially if you’re able to incorporate sentiment analysis into the pipeline. There are very few industries where attaining FOC outcomes are realistic, and it’s totally plausible that well-designed RL-based pricing could mark an improvement over existing workflows, particularly if your pricing/strategy teams are using bad heuristics (like taking a fixed markup percentage over competitor prices). These things <em>are</em> a bit opaque though, and in practice I will likely stick toward more interpretable models that incorporate what all parties can agree are the relevant structural features.</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-areeda1975predatory" class="csl-entry" role="listitem">
+Areeda, Phillip, and Donald F Turner. 1975. <span>“Predatory Pricing and Related Practices Under Section 2 of the Sherman Act.”</span> <em>Harvard Law Review</em>, 697–733.
+</div>
+<div id="ref-bain1968industrial" class="csl-entry" role="listitem">
+Bain, Joe Staten. 1968. <em>Industrial Organization</em>. John Wiley &amp; Sons.
+</div>
+<div id="ref-baumol1982contestable" class="csl-entry" role="listitem">
+Baumol, William J, John C Panzar, and Robert D Willig. 1982. <em>Contestable Markets and the Theory of Industry Structure</em>. Harcourt Brace Jovanovich.
+</div>
+<div id="ref-farrell2010antitrust" class="csl-entry" role="listitem">
+Farrell, Joseph, and Carl Shapiro. 2010. <span>“Antitrust Evaluation of Horizontal Mergers: An Economic Alternative to Market Definition.”</span> <em>The BE Journal of Theoretical Economics</em> 10 (1).
+</div>
+<div id="ref-gigerenzer2011heuristic" class="csl-entry" role="listitem">
+Gigerenzer, Gerd, and Wolfgang Gaissmaier. 2011. <em>Heuristic Decision Making</em>. Annual review of psychology.
+</div>
+<div id="ref-mason1939price" class="csl-entry" role="listitem">
+Mason, Edward S. 1939. <em>Price and Production Policies of Large-Scale Enterprise</em>. The American economic review.
+</div>
+<div id="ref-posner1979chicago" class="csl-entry" role="listitem">
+Posner, Richard A. 1979. <span>“The <span>Chicago</span> School of Antitrust Analysis.”</span> <em>University of Pennsylvania Law Review</em> 127 (4): 925–48.
+</div>
+<div id="ref-simon1956rational" class="csl-entry" role="listitem">
+Simon, Herbert A. 1956. <em>Rational Choice and the Structure of the Environment</em>. <em>Psychological Review</em>. Vol. 63. 2. American Psychological Association.
+</div>
+<div id="ref-us2010horizontal" class="csl-entry" role="listitem">
+U.S. Department of Justice and Federal Trade Commission. 2010. <span>“Horizontal Merger Guidelines.”</span> <em>Federal Trade Commission</em>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://giscus.app/client.js" data-repo="cocuts/cocuts.github.io" data-repo-id="" data-category="General" data-category-id="" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
+</script>
+<input type="hidden" id="giscus-base-theme" value="light">
+<input type="hidden" id="giscus-alt-theme" value="dark">
+</div> <!-- /content -->
+
+
+
+
+</body></html>

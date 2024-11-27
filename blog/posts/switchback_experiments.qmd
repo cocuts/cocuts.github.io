@@ -1,0 +1,24 @@
+---
+title: "Papers: Switchback Price Experiments with Forward-Looking Demand"
+author: "Cory Cutsail"
+date: 10/24/2024
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-title: "This Week"
+    code-fold: true
+    code-summary: "Show the code"
+---
+
+I've been going down a bit of a dynamic pricing rabbit hole - Black Friday is right around the corner and with so many retailers offering some kind of discount it's increasingly difficult to identify value, even as a 'well-informed' consumer. My last blog post covers some early thoughts with simulations, and I've spent some time poking around Arxiv to see where dynamic pricing is right now. There's some really nice theoretical work out this week from a research group at Stanford [Wu, Johari, Syrgkanis, and Weintraub's *Switchback Price Experiments with Forward-Looking Demand*](https://arxiv.org/abs/2410.14904) - they prove that standard two-price experiments cannot identify the true demand gradient in a simple setting with forward-looking consumers while a three-price design can provide unbiased estimates. The simplicity of the environment makes me skeptical that a structural implementation of this model would truly be 'unbiased' -- the estimation here is likely too generous to consumers who are often more myopic than modeled ... so I’d imagine that the contours estimated under this approach yield higher elasticities than we’d see in practice. [I've got some simulation work thinking about this too](https://github.com/cocuts/switchback-pricing-experiment) - my practical OR experience is more in the cost-min and efficiency maximizing spaces, and in grad school the focus was more on equilibrium outcomes than these sort of pricing strategies. I'd like to see what this looks like with (1) myopic consumers, (2) an entry threat, and (3) inventory constraints. I've put some work together in this direction, planning on fleshing this out a bit more and trying to think through some of these implications more in-depth. Myopic consumers seem the most directly impactful for the theory considered here -- the authors postulate an infinite number of consumers with perfect foresight when in actuality there's likely a relatively small number of people who've got your product in their Amazon 'saved for later' list and look at it periodically and any targeted pings about discounts on your product are likely drowned out by social media and other applications' notifications that they're unlikely to be particularly impactful. Inventory constraints are theoretically irrelevant in terms of demand gradient estimation but the implied cost adjustment likely impacts the optimal discounts offered - which should really be emphasized here. A 20% discount, even for a comparatively small subset of potential consumers could drive a small firm into the red. There's a similar issue with entry threats, but the presence of competitors (even in a market with differentiated products) has implications from an efficient rationing perspective that likely distort the estimated gradient. 
+
+::: {.callout-note}
+##### Key Takeaways
+ - Clean identification result that provides useful bounds on demand elasticity
+ - Novel solution to a fundamental measurement problem, even if assumptions about consumer behavior are strong
+ - Three-price design is simple enough to actually implement, unlike most theoretical solutions to strategic consumer problems
+ - Smart positioning at intersection of economics and operations research
+ - Could be extended to incorporate competing firms and inventory constraints, though that might break some of the nice theoretical properties
+:::
+---

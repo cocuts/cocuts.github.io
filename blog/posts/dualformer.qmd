@@ -1,0 +1,77 @@
+---
+title: "Papers: Dualformer"
+author: "Cory Cutsail"
+date: 11/08/2024
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-title: "This Week"
+    code-fold: true
+    code-summary: "Show the code"
+---
+
+### Dualformer: Controllable Fast and Slow Thinking by Learning with Randomized Reasoning Traces
+
+The title rage-baited me. Meta's new [Dualformer: Controllable Fast and Slow Thinking by Learning with Randomized Reasoning Traces](https://arxiv.org/abs/2410.09918) develops a training approach motivated by Kahneman's two systems theory - which is, to me, basically the thinking man's evolutionary psychology: widely held as false by academics active in the field, but digestible enough that everyone loves citing it. Paul Glimcher has some fantastic lectures that break down why the evidence just doesn't support the two-systems model:
+
+```{=html}
+<div class="ratio ratio-16x9">
+  <iframe src="https://www.youtube.com/embed/N6B-7M43Hpg" title="Paul Glimcher on Decision Making" allowfullscreen></iframe>
+</div>
+```
+
+The actual technical meat is interesting despite the motivation: given training data of successfully solved tasks (think mazes or math problems) that includes all solution steps, selectively chop off pieces that aren't crucial for finding the answer. This pruned version simulates the "fast brain" while the complete solution process represents the "slow brain." 
+
+It's fine. But honestly, if you have that kind of training data, why not just train an RL agent? The requirements are basically the same - you need tons of examples of successful problem-solving - but RL gives you a more principled framework for learning optimal behavior.
+
+```{mermaid}
+%%| fig-width: 6.5
+flowchart LR
+    subgraph RLSystem["RL System"]
+        agent["Agent"]
+        exp["Experience Buffer"]
+    end
+
+    subgraph DualSystem["Dualformer"]
+        fast["Fast Path"]
+        slow["Slow Path"]
+        trace["Trace Processing"]
+    end
+
+    subgraph Environment["Environment"]
+        state["State Space"]
+        reward["Reward Signal"]
+    end
+
+    agent --> state
+    state --> reward
+    reward --> agent
+    agent --> exp
+    exp --> trace
+    trace --> fast
+    trace --> slow
+    fast --> agent
+    slow --> agent
+
+    classDef rl fill:#bbf,stroke:#333,stroke-width:2px
+    classDef dual fill:#fbb,stroke:#333,stroke-width:2px
+    classDef env fill:#bfb,stroke:#333,stroke-width:2px
+    
+    class RLSystem rl
+    class DualSystem dual
+    class Environment env
+```
+
+There might be something interesting in combining an RL agent with their architecture though. Imagine co-training the agent and the Dualformer so it learns both quick-and-dirty and careful-and-thorough approaches while the agent bumbles its way to solutions. The diagram above shows how this might work - the RL agent feeds experiences into the Dualformer, which learns both fast and slow solving strategies that can then guide future exploration.
+
+The paper isn't *bad*, and I'm sure it's interesting and valuable to people smarter than me/folks who actually work on transformers day-to-day - the technical work, at a minimum, is solid. But they successfully annoyed me into reading something that over-promised and under-delivered by wrapping a fairly straightforward transformer training technique in cognitive science gift paper. 
+
+::: {.callout-note}
+##### Key Takeaways
+- Solid technical contribution wrapped in questionable cognitive science
+- Probably should've just used RL
+- Potential for interesting hybrid architectures (though that wasn't their point)
+:::
+
+---

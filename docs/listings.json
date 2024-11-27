@@ -2,7 +2,9 @@
   {
     "listing": "/blog/index.html",
     "items": [
-      "/blog/posts/wir-20241025.html",
+      "/blog/posts/dualformer.html",
+      "/blog/posts/regulatory_compliance.html",
+      "/blog/posts/switchback_experiments.html",
       "/blog/posts/dynamic-pricing.html"
     ]
   }

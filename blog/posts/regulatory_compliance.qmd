@@ -1,0 +1,45 @@
+---
+title: "Papers:  Cost of Regulatory Compliance in the United States"
+author: "Cory Cutsail"
+date: 11/01/2024
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-title: "This Week"
+    code-fold: true
+    code-summary: "Show the code"
+---
+
+I've always been pretty interested in the distortionary impact of regulation -- I think people tend to read the lede on the efficiency losses associated with regulation from a theoretical perspective, which by and large glosses over the consumer benefit tied to information asymmetries, and assume that the distortionary impact inherently makes regulation harmful.[Bombardini, Trebbi, and Zhang's Measuring the Costs and Benefits of Regulation](http://www.nber.org/papers/w32955), and [Trebbi and Zhang's The Cost of Regulatory Compliance in the United States](http://www.nber.org/papers/w30691) is now freely available on the NBER site, and it's about what you'd expect. It is interesting to work toward stylized facts on the aggregate regulatory burden as it stands today and how it has evolved over time -- the authors target only the former -- but ultimately it doesn't tell us much about the benefits. A glib framing might contrast how we discuss regulation with how we discuss infrastructure investment: road work wastes a ton of time every year, but ultimately results in fewer accidents and damage to vehicles so on balance it's probably a good thing! Broadly, the former outlines where we're at in terms of evaluating the impact of regulation while the latter implements an interesting method that blends [O*Net](https://www.onetonline.org/) data with employment data outlining on-the-job activities, identifying tasks that are regulation-related (like "evaluate applications for compliance" or "monitor adherence to safety standards"), figuring out what percentage of each occupation's time is spent on regulatory tasks, and then calculating what percentage of a company's total wage bill goes to regulatory compliance. They argue that the cost of regulation exhibits a U-shaped relationship with regulatory costs - medium-sized companies spend the highest percentage on compliance. 
+
+> [They] observe that over time, the inverted-U shape relation between RegIndex and firm size became stronger. In particular, much of the changes in RegIndex (the authors' derived measure of the percentage of an establishment’s total labor spending ascribed to performing
+regulation-related tasks) come from firms with a medium and high level of employment, while there is little change in RegIndex for small firms. Importantly, this enhanced inversed-U relationship between RegIndex and size maps to a greater average log change in RegIndex for
+larger firms
+
+This suggests that neither really small companies (who might fly under the radar) nor really big ones (who can achieve economies of scale in compliance) bear the heaviest regulatory burden. From an identification perspective, the authors employ two main identification strategies:
+
+1. A series of event studies/diff-in-diff around major regulatory changes, like:
+    - Credit CARD Act of 2009 affecting credit card issuers
+    - Energy Policy Act of 2005 and subsequent re-regulation of oil & gas
+    - Dear Colleague Letter of 2011 affecting colleges
+    - ACA affecting hospitals
+    
+2. A shift-share instrument approach to separate enforcement from regulatory requirements. They:
+    - Measure regulatory requirement changes via new regulations from each agency
+    - Measure enforcement changes via changes in regulatory-related employment at agencies
+    - Create Bartik-style instruments based on industry exposure to different agencies
+
+The event studies seem decent for validation - they show RegIndex moves in expected directions when regulations change. Their measure also captures both increases AND decreases in regulation, but I'm not super convinced by their causal claims about effects on firm size distribution. The inverted-U shape in regulatory costs by firm size is descriptive, and while they try to use their instruments to understand whether it's driven by enforcement vs requirements, there are still lots of potential confounders. For instance, mid-sized firms might have different business models or operate in different sectors that require more compliance regardless of firm size per se.
+
+I didn't have high hopes for this paper when the first hit on Google was a writeup by the authors hosted by Cato, but it was at the very least interesting.
+
+::: {.callout-note}
+##### Key Takeaways
+ - Key contribution is new measurement approach: using actual labor allocation data to measure regulatory compliance costs
+ - Find mid-sized firms (~500 employees) bear highest relative regulatory burden
+ - Identification comes from regulatory event studies and shift-share design
+ - Main limitations are potential overestimation of compliance time and missing non-labor costs
+ - Validates well against known regulatory changes but causal claims about firm size effects remain uncertain
+:::
+---

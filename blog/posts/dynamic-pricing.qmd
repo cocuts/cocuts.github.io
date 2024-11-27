@@ -199,7 +199,7 @@ This simulation setup allows us to critically evaluate several key questions:
 5. What are the computational and data requirements for implementing RL-based pricing, and how do these compare to the requirements for sophisticated implementations of traditional approaches?
 
  - So if you're putting together a silly lil model on your personal laptop, this simulation runs start-to-finish in about 5 seconds. And compared to some of the other work I've done in the pricing space, it was a pain in the neck to set up and calibrate. As nice as it would be to get something like this set up right and let it try to solve my own $\pi-max$ problems, I'm reminded of the adage that's been circulating a lot with the rise of the LLM:
- ![Make smarter decisions](hold-em-accountable.jpg)
+ ![Make smarter decisions](./assets/dynamic-pricing/hold-em-accountable.jpg)
 
 Ultimately theese things need a ton of guardrails to avoid erratic behavior, and these guardrails ultimately serve to simulate the optimal behavior we're trying to avoid modeling in the first place. There are a bunch of other non-theoretical reasons, like customer retention or avoidance of tacit collusive behavior, that we might not want to outsource this work too. So like, maybe we should just do the work. I can think of a dozen real-world use cases of RL in an operations management setting, but price setting doesn't seem like a great candidate.
 

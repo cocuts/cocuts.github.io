@@ -2,11 +2,11 @@
   {
     "listing": "/blog/index.html",
     "items": [
+      "/blog/posts/llm_instruments_post.html",
       "/blog/posts/dualformer.html",
       "/blog/posts/regulatory_compliance.html",
       "/blog/posts/switchback_experiments.html",
-      "/blog/posts/dynamic-pricing.html",
-      "/blog/posts/llm_instruments_post.html"
+      "/blog/posts/dynamic-pricing.html"
     ]
   }
 ]

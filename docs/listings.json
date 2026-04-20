@@ -2,6 +2,7 @@
   {
     "listing": "/blog/index.html",
     "items": [
+      "/blog/posts/papers_active_inference.html",
       "/blog/posts/pbm_post_2.html",
       "/blog/posts/llm_instruments_post.html",
       "/blog/posts/dualformer.html",

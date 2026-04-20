@@ -1,0 +1,48 @@
+---
+title: "Papers: Multi-Agent Digital Twins for Strategic Decision-Making using Active Inference"
+author: "Cory Cutsail"
+date: 04/20/2026
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-title: "This Week"
+    code-fold: true
+    code-summary: "Show the code"
+---
+
+## Introduction
+
+I read (and wrote) [this paper](https://arxiv.org/abs/2604.12657) (blog post) over multiple days. I picked it up initially last Friday but put it down over what turned out to be a pretty busy weekend. I was seeing what was out in the ether this morning when I remembered I was working on this so here we are - me writing, you (no one) reading.
+
+The active inference stuff is an old interest of mine. I used to be really into neuroecon and as a result spend a good deal of time thinking about the neurological fundamentals of decision making under uncertainty. It's a bit buzzy but I think the canonical examples like the outfielder's problem are pretty captivating.
+
+On the work side I've been building what I've been calling an "experimentation platform" - a tool for understanding how simulated individuals might respond to information we share generally like a phone reminder to get their medications. I'm not totally convinced that this stuff makes sense because it doesn't seem like general purpose models are able to really *be* the person we're simulating them as - in many cases it's prompt driven as opposed to like fine tuning for each individual. Regardless I try to keep my finger on the pulse in this space and the title grabbed me as an interesting combination of a topic I'm actively working on and something likely relevant for doing that work well.
+
+## What's the Paper
+
+Everything has been GPT AI for the past three years. This paper is explicitly a "not that" exercise - it's well founded both in the neuro and the game theoretic economic approaches. Their foundation models are POMDPs which I think likely are a better theoretical starting point than lobbing a bunch of prompts.
+
+The paper proposes a multi-agent active inference framework for digital twins with two main contributions: contextual inference (agents can detect regime shifts and adapt their behavior) and streaming machine learning integrated into the generative model to update preferences online as the environment changes. Each agent maintains its own generative model — a POMDP with discrete states, actions, and observations — and interacts with other agents only through a shared environment. They demonstrate the framework on a Cournot competition: firms choosing production quantities, facing noisy warehouse signals, with the option to pay a fixed cost for a cleaner signal. The Nash equilibrium is known analytically so there's a ground truth to validate against.
+
+The Cournot stuff is pretty standard - exactly what you'd expect and want to see in a paper like this. It's a toy example to illustrate the method which is generally appropriate for a methods paper. Streaming for concept drift and adaptive goal-directed behavior seems like it'd be useful in scenarios where individuals have preferences that change over time.
+
+## Where This Sits Theoretically
+
+The mechanism they describe - where agents can either pay a fixed cost for information or infer the stock level from a noisy signal - definitely resonates. Stokey has a book called [The Economics of Inaction](https://press.princeton.edu/books/hardcover/9780691135052/the-economics-of-inaction) that's about 300 pages on how to reason about fixed costs - this stuff is non-trivial. This paper has a different "feel" from traditional control but at its core it really is a control problem. It sits somewhere in between Stokey's rigor and [Dixit's](https://press.princeton.edu/books/hardcover/9780691034102/investment-under-uncertainty) readability - it is fundamentally a control method sure and is clearly well founded technically but the whole machinery of control in this context feels a bit easier reading this than it would in a traditional macro theory text.
+
+In Stokey or Dixit the agent is typically solving an optimization problem where the value function is derived from first principles with stopping rules or investment thresholds emerging analytically. In this paper the agents aren't solving anything analytically - they're running variational inference over a hand-specified generative model and the "control" emerges from EFE minimization. The policy isn't derived but selected from a discrete set through scoring each candidate policy against expected free energy. It feels a bit more practical to me to say "we have 3 candidate policies and we want to know their potential impact." Think about a "no tax on tips" policy - where you have the current state say 12% tip tax, the "no tax" policy say 0% tip tax, and the "graduated-but-reduced" tax on tips policy where you follow a similar marginal income tax policy that's in place today but reduce it at the lower end and increase it at the higher end. You don't really need all of this machinery for a relatively simple set of policies - the point is that this is a totally valid approach to reasoning about a policy space when we don't need to understand the full set of equilibrium outcomes - only the ones that are likely to matter in practice.
+
+## So What's This Good For
+
+Today I might not need my meds. Today I might feel great. If I go a week without them I might not feel so good. My preferences my need for medications might drift over time. Similarly if I'm offered a small Home Depot gift card for completing my health risk assessment maybe I don't care so much in December when I'm just trying to stay warm. In March when I'm doing yard work that might just buy me a new rake. There's an explicit temporal variance I'm describing here that's largely state dependent but my preferences also could be a function of an unobserved "mood." Maybe I just don't feel like talking to anyone today so I ignore all of the phone calls coming in. Conversely maybe someone who normally never answers decides they want to pick up and troll only to be told they missed a medication fill they'd forgotten about.
+
+The streaming ML component - the SRP model updating the preference array online - is a principled way to handle exactly that kind of thing as opposed to just assuming preferences are fixed. Part of the policy space in Medicare Stars for example could involve a threshold at which Care Management outreach is triggered. Adding the ability to detect regime change makes modeling the outcome of said outreach at scale more straightforward.
+
+Most of this stuff could be done with a simpler model - I don't think the point is necessarily that this is an easier approach to implement than the guy in ops' 15 year old hand-calculated Excel model. The point is simulated outcomes and optimal policy determination with noisy signals. If I were to take this to work we would couple existing known quantities and modeled unobservables with forecasted future outcomes to derive the discrete action space as opposed to just kind of saying "these are the characteristics we've chosen for the model." That's how this kind of stuff goes - there are always going to be assumptions but how you get to those assumptions is where a lot of the work is. In practice they're not just made up boundaries instead founded in historical and projected outcomes and associated distributional bounds.
+
+## Conclusion
+
+It's refreshing to see the phrase "digital twin" where it isn't paired with "Here is how to seed agents in ChatGPT and use them to simulate forward policy evaluation." The industry is moving toward GenAI for this kind of work - it's just too easy not to - but there will always be space in my heart and my mornings for well-considered theoretical work on simulated behavior. The GenAI stuff is a useful quick testbed for reasoning about policy impacts but there are myriad issues with those approaches that can be difficult in practice to account for - and thus largely ignored. Work that addresses those limitations up front and forces you to grapple with your assumptions will always be more reliable in practice and I think this paper is a real contribution in that direction.
+
+Alas it seems we've skipped the happy medium between well-founded enormous Excel notebook and cluster of agents simulating our decisions.

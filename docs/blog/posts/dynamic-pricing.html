@@ -361,7 +361,7 @@ window.Quarto = {
 <li><p><strong>Outcome Measures</strong>: We will track prices, profits, and market concentration over time.</p></li>
 </ol>
 <p>All of the code for the simulation below can be found in <a href="https://github.com/cocuts/dynamic-pricing-sim">this repo</a>.</p>
-<div id="afa186ba" class="cell" data-execution_count="1">
+<div id="ed00dbc3" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dynamic_pricing_sim <span class="im">import</span> Market, FOCFirm, HeuristicFirm, RLFirm, run_simulation, plot_results</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -407,22 +407,19 @@ window.Quarto = {
 <div class="cell-output cell-output-stderr">
 <pre><code>C:\Users\Cory\AppData\Local\Programs\Python\Python310\lib\site-packages\dynamic_pricing_sim\equilibrium.py:15: RuntimeWarning: The iteration is not making good progress, as measured by the 
   improvement from the last ten iterations.
-  equilibrium_prices = fsolve(equations, initial_guess)
-C:\Users\Cory\AppData\Local\Programs\Python\Python310\lib\site-packages\dynamic_pricing_sim\equilibrium.py:15: RuntimeWarning: The iteration is not making good progress, as measured by the 
-  improvement from the last five Jacobian evaluations.
   equilibrium_prices = fsolve(equations, initial_guess)</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Recent avg profit: -26.15, Last price: 9.88, Last profit: -66.57
-Recent avg profit: -16.23, Last price: 9.88, Last profit: 0.00
-Recent avg profit: 26.47, Last price: 9.88, Last profit: 0.00
-Recent avg profit: 42.90, Last price: 9.88, Last profit: -8.98
-Recent avg profit: 61.30, Last price: 9.88, Last profit: 0.00
-Recent avg profit: 84.84, Last price: 9.88, Last profit: 116.33
-Recent avg profit: 90.84, Last price: 9.88, Last profit: 116.33
-Recent avg profit: 107.85, Last price: 9.88, Last profit: 116.33
-Recent avg profit: 114.01, Last price: 9.88, Last profit: 116.33
-Recent avg profit: 109.79, Last price: 9.88, Last profit: 116.33</code></pre>
+<pre><code>Recent avg profit: -27.71, Last price: 9.88, Last profit: -98.40
+Recent avg profit: -13.13, Last price: 9.88, Last profit: -2.04
+Recent avg profit: 19.12, Last price: 9.88, Last profit: 14.18
+Recent avg profit: 62.48, Last price: 9.88, Last profit: 116.33
+Recent avg profit: 65.41, Last price: 9.88, Last profit: 16.02
+Recent avg profit: 92.05, Last price: 9.88, Last profit: 24.20
+Recent avg profit: 102.69, Last price: 9.88, Last profit: 116.33
+Recent avg profit: 109.56, Last price: 9.88, Last profit: 116.33
+Recent avg profit: 110.52, Last price: 9.88, Last profit: 116.33
+Recent avg profit: 114.01, Last price: 9.88, Last profit: 116.33</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -434,7 +431,7 @@ Recent avg profit: 109.79, Last price: 9.88, Last profit: 116.33</code></pre>
 </div>
 <p>Ok so the RL firm settles into a decent strategy over time that behaves <sub>reasonably</sub> well in the long-run. The FOC firms are mostly stable, as expected, and the heuristic firm is all over the place. That’s what you get for raising prices erratically for no reason! Bad profits!</p>
 <p>Here are some of the summary stats we get from the above:</p>
-<div id="d02134bb" class="cell" data-execution_count="2">
+<div id="1e69ea31" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>avg_prices <span class="op">=</span> np.mean(prices_history, axis<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>avg_profits <span class="op">=</span> np.mean(profits_history, axis<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>price_volatility <span class="op">=</span> np.std(prices_history, axis<span class="op">=</span><span class="dv">0</span>)</span>
@@ -448,16 +445,16 @@ Recent avg profit: 109.79, Last price: 9.88, Last profit: 116.33</code></pre>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>firm_type<span class="sc">}</span><span class="ss"> Firm: </span><span class="sc">{</span>avg_profits[i]<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Average Prices:
-FOC Firm: 9.57
-FOC2 Firm: 9.55
-Heuristic Firm: 17.68
-RL Firm: 7.29
+FOC Firm: 9.71
+FOC2 Firm: 9.68
+Heuristic Firm: 18.01
+RL Firm: 7.43
 
 Average Profits:
-FOC Firm: 74.97
-FOC2 Firm: 74.77
-Heuristic Firm: -0.01
-RL Firm: 59.56</code></pre>
+FOC Firm: 77.92
+FOC2 Firm: 77.69
+Heuristic Firm: -0.02
+RL Firm: 63.50</code></pre>
 </div>
 </div>
 </section>
@@ -492,7 +489,7 @@ RL Firm: 59.56</code></pre>
 <li>What are the computational and data requirements for implementing RL-based pricing, and how do these compare to the requirements for sophisticated implementations of traditional approaches?</li>
 </ol>
 <ul>
-<li>So if you’re putting together a silly lil model on your personal laptop, this simulation runs start-to-finish in about 5 seconds. And compared to some of the other work I’ve done in the pricing space, it was a pain in the neck to set up and calibrate. As nice as it would be to get something like this set up right and let it try to solve my own <span class="math inline">\(\pi-max\)</span> problems, I’m reminded of the adage that’s been circulating a lot with the rise of the LLM: <img src="hold-em-accountable.jpg" class="img-fluid" alt="Make smarter decisions"></li>
+<li>So if you’re putting together a silly lil model on your personal laptop, this simulation runs start-to-finish in about 5 seconds. And compared to some of the other work I’ve done in the pricing space, it was a pain in the neck to set up and calibrate. As nice as it would be to get something like this set up right and let it try to solve my own <span class="math inline">\(\pi-max\)</span> problems, I’m reminded of the adage that’s been circulating a lot with the rise of the LLM: <img src="./assets/dynamic-pricing/hold-em-accountable.jpg" class="img-fluid" alt="Make smarter decisions"></li>
 </ul>
 <p>Ultimately theese things need a ton of guardrails to avoid erratic behavior, and these guardrails ultimately serve to simulate the optimal behavior we’re trying to avoid modeling in the first place. There are a bunch of other non-theoretical reasons, like customer retention or avoidance of tacit collusive behavior, that we might not want to outsource this work too. So like, maybe we should just do the work. I can think of a dozen real-world use cases of RL in an operations management setting, but price setting doesn’t seem like a great candidate.</p>
 <p>On the topic of tacit collusion, from an antitrust perspective it’s super important to understand whether RL algorithms fundamentally change the nature of market competition. Can RL algorithms learn to coordinate on high markups without explicit collusion? If so, is this fundamentally different from tacit collusion that can arise with traditional pricing methods? The former seems likely, especially if you have two agents functionally following the same strategy by being trained with the same data. There’s an interesting segment on quant work from Good News that talks a bit about how the algorithms quants use at finance firms</p>
